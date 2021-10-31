@@ -6,7 +6,7 @@
 #    By: nvideira <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/25 01:36:26 by nvideira          #+#    #+#              #
-#    Updated: 2021/10/25 16:40:35 by nvideira         ###   ########.fr        #
+#    Updated: 2021/10/31 01:02:11 by nvideira         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,11 +33,26 @@ SOURCES=	ft_atoi.c\
 			ft_strrchr.c\
 			ft_tolower.c\
 			ft_toupper.c\
-			ft_substr.c
+			ft_substr.c\
+			ft_strjoin.c\
+			ft_strtrim.c\
+			ft_split.c\
+			ft_itoa.c\
+			ft_strmapi.c\
+			ft_striteri.c\
+			ft_putchar_fd.c\
+			ft_putstr_fd.c\
+			ft_putendl_fd.c\
+			ft_putnbr_fd.c
+
+BONUS=		ft_lstnew.c\
+			ft_lstadd_front.c\
+			ft_lstsize.c
 
 
 NAME=		libft.a
 OBJECTS=	$(SOURCES:.c=.o)
+OBJECT_BONUS=	$(BONUS:.c=.o)
 CC=			gcc
 CFLAGS=		-Wall -Werror -Wextra
 
@@ -50,8 +65,11 @@ $(NAME): $(OBJECTS)
 	ar rcs $(NAME) $(OBJECTS)
 	ranlib $(NAME)
 
+bonus: $(NAME) $(OBJECT_BONUS)
+	ar rcs $(NAME) $(OBJECT_BONUS)
+	
 clean:
-	rm -f $(OBJECTS)
+	rm -f $(OBJECTS) $(OBJECT_BONUS)
 
 fclean:	clean
 	rm -f $(NAME)

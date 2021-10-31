@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/25 01:36:05 by nvideira          #+#    #+#             */
-/*   Updated: 2021/10/28 16:51:23 by nvideira         ###   ########.fr       */
+/*   Created: 2021/10/30 19:06:11 by nvideira          #+#    #+#             */
+/*   Updated: 2021/10/30 20:40:45 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	char			*sub;
 	unsigned int	i;
 
 	i = 0;
-	if (!s)
-		return (NULL);
-	if (!len || ft_strlen(s) < start)
-		return (ft_strdup(""));
-	sub = malloc((len + 1) * sizeof(char));
-	if (!sub)
-		return (NULL);
-	while (s[start + i] != '\0' && i < len)
+	if (!s || !f)
+		return ;
+	while (s[i])
 	{
-		sub[i] = s[start + i];
+		(*f)(i, &s[i]);
 		i++;
 	}
-	sub[i] = '\0';
-	return (sub);
 }
