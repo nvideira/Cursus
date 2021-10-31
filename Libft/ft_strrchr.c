@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nvideira <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:00:32 by nvideira          #+#    #+#             */
-/*   Updated: 2021/10/25 16:38:52 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/10/31 20:33:54 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ char	*ft_strrchr(const char *s, int c)
 	ini = s;
 	i = ft_strlen(s);
 	s += i;
-	while (s != ini && *s != c)
+	while (s != ini && *s != (unsigned char )c)
 		s--;
-	if (*s == c)
+	if (*s == (unsigned char )c)
 		return ((char *)s);
 	return (0);
 }

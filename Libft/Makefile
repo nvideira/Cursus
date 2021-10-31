@@ -6,7 +6,7 @@
 #    By: nvideira <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/25 01:36:26 by nvideira          #+#    #+#              #
-#    Updated: 2021/10/31 01:02:11 by nvideira         ###   ########.fr        #
+#    Updated: 2021/10/31 18:36:23 by nvideira         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,13 @@ SOURCES=	ft_atoi.c\
 
 BONUS=		ft_lstnew.c\
 			ft_lstadd_front.c\
-			ft_lstsize.c
+			ft_lstsize.c\
+			ft_lstlast.c\
+			ft_lstadd_back.c\
+			ft_lstdelone.c\
+			ft_lstclear.c\
+			ft_lstiter.c\
+			ft_lstmap.c
 
 
 NAME=		libft.a

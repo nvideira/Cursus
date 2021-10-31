@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 01:36:05 by nvideira          #+#    #+#             */
-/*   Updated: 2021/10/28 16:51:23 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/10/31 20:46:01 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	if (!len || ft_strlen(s) < start)
 		return (ft_strdup(""));
+	if (len > ft_strlen(s))
+		return (ft_strdup(s));
 	sub = malloc((len + 1) * sizeof(char));
 	if (!sub)
 		return (NULL);

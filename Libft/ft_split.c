@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 17:03:49 by nvideira          #+#    #+#             */
-/*   Updated: 2021/10/29 17:42:16 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/10/31 22:27:04 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	ft_wordcount(const char *str, char c)
 	return (words);
 }
 
-static void	split_it(char const *s, char c, int st, char **ns)
+static int	split_it(char const *s, char c, int st, char **ns)
 {
 	int	i;
 	int	j;
@@ -54,25 +54,39 @@ static void	split_it(char const *s, char c, int st, char **ns)
 			break ;
 		if (ft_space(s[i], c) == 0 && ft_space(s[i + 1], c) == 1)
 		{
-			ns[j++] = ft_substr(s, st, (i - st) + 1);
+			ns[j] = ft_substr(s, st, (i - st) + 1);
+			if (!ns[j++])
+				return (0);
 			st = i + 1;
 		}
 		i++;
 	}
 	ns[j] = NULL;
+	return (1);
+}
+
+void	*freematrix(char **ns, int msize)
+{
+	while (msize--)
+		free(ns[msize]);
+	free(ns);
+	return (NULL);
 }
 
 char	**ft_split(const char *s, char c)
 {
 	char	**ns;
 	size_t	st;
+	int		matlen;
 
 	st = 0;
 	if (!s)
 		return (NULL);
-	ns = malloc(sizeof(char *) * (ft_wordcount(s, c)));
+	matlen = ft_wordcount(s, c);
+	ns = malloc(sizeof(char *) * matlen + 1);
 	if (!ns)
 		return (NULL);
-	split_it(s, c, st, ns);
+	if (!split_it(s, c, st, ns))
+		return (freematrix(ns, matlen));
 	return (ns);
 }
