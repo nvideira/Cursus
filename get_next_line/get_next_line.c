@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 20:16:20 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/07 19:03:19 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/08 19:43:40 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,47 @@
 # define BUFFER_SIZE 42
 #endif
 
+static void	add_extra(char *line, char *buffer, long long bytes)
+{
+	
+}
+
+static void	buffer_to_line(char *buffer)
+{
+	long long	i;
+
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
+	
+	
+}
+
 char	*get_next_line(int fd)
+{
+	long long	bytes;
+	char	buffer[BUFFER_SIZE + 1];
+	static char	*line;
+
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	line = malloc(BUFFER_SIZE * sizeof(char));
+	if (!line)
+		return (NULL);
+	bytes = read(fd, buffer, BUFFER_SIZE);
+	buffer[bytes] = '\0';
+	while (bytes > 0 && !ft_strchr(buffer, '\n'))
+	{
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes] = '\0';
+		if (!line)
+			line = ft_strdup(buffer);
+		else
+			line = ft_strjoin(line, buffer);
+	}
+	
+}
+/*char	*get_next_line(int fd)
 {
 	static char		*bufstr;
 	static char		*str;
@@ -31,11 +71,11 @@ char	*get_next_line(int fd)
 		strfin = ft_strjoin(strfin, overbuff);
 		free (overbuff);
 	}
-	if (fd < 0 || buff < 0)
+	if (fd < 0 || buff <= 0)
 		return (NULL);
 	while (fd)
 	{
-		bufstr = (char *)malloc(BUFFER_SIZE * sizeof(char));
+		bufstr = (char *)malloc(BUFFER_SIZE * sizeof(char) + 1);
 		if (!bufstr)
 			return (NULL);
 		read(fd, bufstr, BUFFER_SIZE);
@@ -54,3 +94,4 @@ char	*get_next_line(int fd)
 	free (str);
 	return (strfin);
 }
+*/
