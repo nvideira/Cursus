@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 20:17:01 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/14 19:25:18 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/18 03:24:49 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,16 @@ size_t	ft_strlen(const char *str)
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != (char )c && *s != '\0')
-		s++;
-	if (*s == (char )c)
-		return ((char *)s);
-	else
-		return (NULL);
+	if (s)
+	{
+		while (*s != (char )c && *s != '\0')
+			s++;
+		if (*s == (char )c)
+			return ((char *)s);
+		else
+			return (NULL);
+	}
+	return (NULL);
 }
 
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
@@ -128,8 +132,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (len > ft_strlen(s))
 	{
-		len = ft_strlen(s);
-		return (ft_substr(s, start, len));
+		len = ft_strlen(s) - (size_t )start;
+		//return (ft_substr(s, start, len));
 	}
 	sub = malloc((len + 1) * sizeof(char));
 	if (!sub)
@@ -141,4 +145,31 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	sub[i] = '\0';
 	return (sub);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char			*ns;
+	unsigned int	i;
+	unsigned int	j;
+
+	i = 0;
+	j = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	ns = malloc((ft_strlen(s1) + ft_strlen(s2)) * sizeof(char) + 1);
+	if (!ns)
+		return (NULL);
+	while (s1[i])
+	{
+		ns[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		ns[i + j] = s2[j];
+		j++;
+	}
+	ns[i + j] = '\0';
+	return (ns);
 }

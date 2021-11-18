@@ -5,70 +5,80 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/09 16:32:15 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/14 22:38:54 by nvideira         ###   ########.fr       */
+/*   Created: 2021/11/18 00:12:28 by nvideira          #+#    #+#             */
+/*   Updated: 2021/11/18 18:37:36 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
-char	*save_lines(char *content_read, char *ret_str, char **store)
+int	check_storage(char **storage)
 {
 	unsigned int	i;
-	size_t			cr_len;
 
 	i = 0;
-	cr_len = ft_strlen(content_read);
-	while (content_read[i] != '\n' && content_read[i] != '\0')
+	while ((*storage)[i] != '\n' && (*storage)[i] != '\0')
 		i++;
-	if (ret_str == NULL)
-		ret_str = ft_substr(content_read, 0, i + 1);
+	if ((*storage)[i] == '\n' && (*storage)[i + 1] == '\0')
+		return (1);
 	else
-		ret_str = ft_strljoin(ret_str, content_read, i + 1);
-	if (content_read[i] == '\n' && content_read[i + 1] != '\0')
+		return (0);
+}
+
+char	*buffer_to_str(char *buffer, char *string, char **storage)
+{	
+	unsigned int	i;
+
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
+	string = ft_strljoin(string, buffer, i + 1);
+	if (buffer[i] == '\n' && buffer[i + 1] != '\0')
 	{
-		*store = ft_substr(content_read, i + 1, cr_len - i);
-		printf("stored string: %s\n", *store);
+		*storage = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
 	}
-	//printf("ret_str at end of save_lines:\n%s\n", ret_str);
-	printf("store at end of save_lines: %s\n", *store);
-	return (ret_str);
+	return (string);
+}
+
+char	*read_to_buffer(int fd, char *buffer, char *string, char **storage)
+{
+	int		rd_check;
+
+	if (BUFFER_SIZE < 1)
+		return (NULL);
+	rd_check = 1;
+	while (rd_check > 0 && !ft_strchr(buffer, '\n'))
+	{
+		rd_check = read(fd, buffer, BUFFER_SIZE);
+		string = buffer_to_str(buffer, string, storage);
+	}
+	return (string);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*ret_str;
-	char		*content_read;
-	static char	*store;
-	long long	read_check;
+	char		*string;
+	static char	*storage;
+	char		buffer[BUFFER_SIZE + 1];
 
-	printf("--------\ndoes store exist? %s\n", store);
-	if (read(fd, 0, 0) == -1 || fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
+	string = "";
+	buffer[BUFFER_SIZE] = '\0';
+	if (fd < 0)
 		return (NULL);
-	content_read = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!content_read)
-		return (NULL);
-	read_check = read(fd, content_read, BUFFER_SIZE);
-	content_read[read_check] = '\0';
-	//printf("verification:\n%s-------------\n", content_read);
-	if (store && read_check > 0)
+	if (storage)
 	{
-		ret_str = ft_strljoin(ret_str, store, ft_strlen(store));
-		printf("stored string at recall: %s\n", store);
-		free (store);
-	//	printf("stored string after free: %s\n", store);
+		string = buffer_to_str(storage, string, &storage);
+		if (ft_strchr(storage, '\n'))
+		{
+			if (check_storage(&storage))
+				free(storage);
+			return (string);
+		}
 	}
-	ret_str = save_lines(content_read, ret_str, &store);
-	while (read_check > 0 && !ft_strchr(content_read, '\n'))
-	{
-		read_check = read(fd, content_read, BUFFER_SIZE);
-		ret_str = save_lines(content_read, ret_str, &store);
-	}
-	free (content_read);
-	return (ret_str);
+	if (!ft_strchr(storage, '\n'))
+		string = read_to_buffer(fd, buffer, string, &storage);
+	return (string);
 }
 
 int	main(void)
@@ -76,8 +86,8 @@ int	main(void)
 	int	fd;
 
 	fd = open("texto.txt", O_RDONLY);
-	printf("->first call\n%s\n", get_next_line(fd));
-	printf("->second call\n%s\n", get_next_line(fd));
-	printf("->third call\n%s\n", get_next_line(fd));
-	printf("->fourth call\n%s\n", get_next_line(fd));
+	printf("->%s", get_next_line(fd));
+	printf("->%s", get_next_line(fd));
+	printf("->%s", get_next_line(fd));
+	printf("->%s", get_next_line(fd));
 }
