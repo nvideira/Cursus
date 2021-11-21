@@ -6,24 +6,29 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 00:12:28 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/18 18:37:36 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/21 18:44:20 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-int	check_storage(char **storage)
+char	*add_update_storage(char *string, char **storage)
 {
 	unsigned int	i;
 
 	i = 0;
 	while ((*storage)[i] != '\n' && (*storage)[i] != '\0')
 		i++;
-	if ((*storage)[i] == '\n' && (*storage)[i + 1] == '\0')
-		return (1);
+	string = ft_strljoin(string, *storage, i + 1);
+	if ((*storage)[i] == '\n' && (*storage)[i + 1] != '\0')
+		*storage = ft_substr(*storage, i + 1, ft_strlen(*storage) - i);
 	else
-		return (0);
+	{
+		free(*storage);
+		*storage = NULL;
+	}
+	return (string);
 }
 
 char	*buffer_to_str(char *buffer, char *string, char **storage)
@@ -35,9 +40,7 @@ char	*buffer_to_str(char *buffer, char *string, char **storage)
 		i++;
 	string = ft_strljoin(string, buffer, i + 1);
 	if (buffer[i] == '\n' && buffer[i + 1] != '\0')
-	{
 		*storage = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
-	}
 	return (string);
 }
 
@@ -51,8 +54,19 @@ char	*read_to_buffer(int fd, char *buffer, char *string, char **storage)
 	while (rd_check > 0 && !ft_strchr(buffer, '\n'))
 	{
 		rd_check = read(fd, buffer, BUFFER_SIZE);
+		buffer[rd_check] = '\0';
 		string = buffer_to_str(buffer, string, storage);
 	}
+	if (rd_check <= 0)
+	{
+		if ((*storage) != NULL)
+			free(*storage);
+		*storage = NULL;
+		free(buffer);
+		return (NULL);
+	}
+	if (rd_check < 1)
+		free(buffer);
 	return (string);
 }
 
@@ -60,21 +74,21 @@ char	*get_next_line(int fd)
 {
 	char		*string;
 	static char	*storage;
-	char		buffer[BUFFER_SIZE + 1];
+	char		*buffer;
 
-	string = "";
-	buffer[BUFFER_SIZE] = '\0';
-	if (fd < 0)
+	if (fd < 0 || fd > 1024)
 		return (NULL);
+	string = "";
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	buffer[0] = '\0';
+	buffer[BUFFER_SIZE] = '\0';
 	if (storage)
 	{
-		string = buffer_to_str(storage, string, &storage);
-		if (ft_strchr(storage, '\n'))
-		{
-			if (check_storage(&storage))
-				free(storage);
+		string = add_update_storage(string, &storage);
+		if (ft_strchr(string, '\n'))
 			return (string);
-		}
 	}
 	if (!ft_strchr(storage, '\n'))
 		string = read_to_buffer(fd, buffer, string, &storage);
@@ -85,9 +99,15 @@ int	main(void)
 {
 	int	fd;
 
-	fd = open("texto.txt", O_RDONLY);
-	printf("->%s", get_next_line(fd));
-	printf("->%s", get_next_line(fd));
-	printf("->%s", get_next_line(fd));
-	printf("->%s", get_next_line(fd));
+	fd = open("41_no_nl.txt", O_RDONLY);
+	printf("1->%s", get_next_line(fd));
+	printf("2->%s", get_next_line(fd));
+	printf("3->%s", get_next_line(fd));
+	printf("4->%s", get_next_line(fd));
+	printf("5->%s", get_next_line(fd));
+	printf("6->%s", get_next_line(fd));
+	printf("7->%s", get_next_line(fd));
+	printf("8->%s", get_next_line(fd));
+	printf("9->%s", get_next_line(fd));
+	printf("10->%s", get_next_line(fd));
 }
