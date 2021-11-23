@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 00:12:28 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/21 18:44:20 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/22 23:37:58 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,24 @@
 char	*add_update_storage(char *string, char **storage)
 {
 	unsigned int	i;
+	char			*vivi;
 
 	i = 0;
 	while ((*storage)[i] != '\n' && (*storage)[i] != '\0')
 		i++;
-	string = ft_strljoin(string, *storage, i + 1);
+	vivi = ft_strljoin(string, *storage, i + 1);
+	free(string);
+	string = ft_strdup(vivi);
+	free(vivi);
+	vivi = NULL;
 	if ((*storage)[i] == '\n' && (*storage)[i + 1] != '\0')
-		*storage = ft_substr(*storage, i + 1, ft_strlen(*storage) - i);
+	{
+		vivi = ft_substr(*storage, i + 1, ft_strlen(*storage) - i);
+		free(*storage);
+		*storage = ft_strdup(vivi);
+		free(vivi);
+		vivi = NULL;
+	}
 	else
 	{
 		free(*storage);
@@ -34,13 +45,24 @@ char	*add_update_storage(char *string, char **storage)
 char	*buffer_to_str(char *buffer, char *string, char **storage)
 {	
 	unsigned int	i;
+	char			*soba;
 
 	i = 0;
 	while (buffer[i] != '\n' && buffer[i] != '\0')
 		i++;
-	string = ft_strljoin(string, buffer, i + 1);
+	soba = ft_strljoin(string, buffer, i + 1);
+	free(string);
+	string = ft_strdup(soba);
+	free(soba);
+	soba = NULL;
 	if (buffer[i] == '\n' && buffer[i + 1] != '\0')
-		*storage = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
+	{
+		soba = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
+		free(buffer);
+		*storage = ft_strdup(soba);
+		free(soba);
+		soba = NULL;
+	}
 	return (string);
 }
 
@@ -62,11 +84,13 @@ char	*read_to_buffer(int fd, char *buffer, char *string, char **storage)
 		if ((*storage) != NULL)
 			free(*storage);
 		*storage = NULL;
-		free(buffer);
+		//free(buffer);
+		if (string)
+			return (string);
 		return (NULL);
 	}
-	if (rd_check < 1)
-		free(buffer);
+//	if (rd_check < 1)
+//		free(buffer);
 	return (string);
 }
 
@@ -78,7 +102,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || fd > 1024)
 		return (NULL);
-	string = "";
+	string = NULL;
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
@@ -95,7 +119,7 @@ char	*get_next_line(int fd)
 	return (string);
 }
 
-int	main(void)
+/*int	main(void)
 {
 	int	fd;
 
@@ -110,4 +134,4 @@ int	main(void)
 	printf("8->%s", get_next_line(fd));
 	printf("9->%s", get_next_line(fd));
 	printf("10->%s", get_next_line(fd));
-}
+}*/
