@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 20:17:01 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/21 16:56:12 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/29 00:46:19 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_strdup(const char *s1)
 
 	if (!s1)
 		return (NULL);
-	p = malloc(ft_strlen(s1) + 1);
+	p = malloc(ft_strlen(s1));
 	if (!p)
 		return (NULL);
 	i = -1;
@@ -114,11 +114,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (!len || ft_strlen(s) < start)
 		return (ft_strdup(""));
 	if (len > ft_strlen(s))
-	{
 		len = ft_strlen(s) - (size_t)start;
-		// return (ft_substr(s, start, len));
-	}
-	sub = malloc((len + 1) * sizeof(char));
+	sub = malloc((len) * sizeof(char));
 	if (!sub)
 		return (NULL);
 	while (s[start + i] != '\0' && i < len)
@@ -138,7 +135,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
-	if (!s1 || !s2)
+	if (!s2)
 		return (NULL);
 	ns = malloc((ft_strlen(s1) + ft_strlen(s2)) * sizeof(char) + 1);
 	if (!ns)
