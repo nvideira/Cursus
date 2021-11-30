@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:18:53 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/29 01:46:17 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/30 01:02:02 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ char	*morph(char **storage, char *string)
 	while ((*storage)[i] != '\n' && (*storage)[i] != '\0')
 		i++;
 	intern = ft_strljoin(string, *storage, i + 1);
+	free(string);
 	return_of_the_string = ft_strdup(intern);
 	free(intern);
-	intern = NULL;
 	if ((*storage)[i] == '\n' && (*storage)[i + 1] != '\0')
 	{
 		intern = ft_substr(*storage, i + 1, ft_strlen(*storage) - i);
@@ -67,6 +67,11 @@ char	*morph(char **storage, char *string)
 	}
 	return (return_of_the_string);
 }
+
+// char	*read_em_and_weep(char **storage, int chomp)
+// {
+	
+// }
 
 char	*get_next_line(int fd)
 {
@@ -85,7 +90,6 @@ char	*get_next_line(int fd)
 		if (ft_strchr(string, '\n'))
 			return (string);
 	}
-	buffer[0] = '\0';
 	chomp = read(fd, buffer, BUFFER_SIZE);
 	if (chomp <= 0 && !string)
 	{
@@ -101,11 +105,10 @@ char	*get_next_line(int fd)
 		chomp = read(fd, buffer, BUFFER_SIZE);
 		buffer[chomp] = '\0';
 		temp = ft_strljoin(storage, buffer, ft_strlen(buffer));
-		//free(storage); --> bye leaks, but segfaults
+		free(storage);
 		storage = ft_strdup(temp);
 		free(temp);
 	}
-	temp = NULL;
 	string = morph(&storage, string);
 	return (string);
 }
@@ -126,22 +129,22 @@ char	*get_next_line(int fd)
 // 	printf("9->%s", get_next_line(fd));
 // 	printf("10->%s", get_next_line(fd));
 // }
-int	main()
-{
-	int fd;
-	char *line;
+// int	main()
+// {
+// 	int fd;
+// 	char *line;
 
-	fd = open("multiple_line_no_nl", O_RDONLY);
-	line = NULL;
-	while (1)
-	{
-		line = get_next_line(fd);
-		printf("%s|", line);
-		free(line);
-		if (!line)
-			break ;
-	}
-}
+// 	fd = open("multiple_line_no_nl", O_RDONLY);
+// 	line = NULL;
+// 	while (1)
+// 	{
+// 		line = get_next_line(fd);
+// 		printf("%s|", line);
+// 		free(line);
+// 		if (!line)
+// 			break ;
+// 	}
+// }
 	// line = get_next_line(fd);
  	// printf("%s", line);
  	// free(line);
