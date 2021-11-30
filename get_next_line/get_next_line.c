@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:18:53 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/30 01:02:02 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/30 16:20:15 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,31 @@ char	*morph(char **storage, char *string)
 	return (return_of_the_string);
 }
 
-// char	*read_em_and_weep(char **storage, int chomp)
-// {
-	
-// }
+char	*read_em_and_weep(int fd, char **storage, int *chomp)
+{
+	char		*temp;
+
+	*chomp = read(fd, buffer, BUFFER_SIZE);
+	if (*chomp <= 0 && !storage)
+	{
+		if (*storage != NULL)
+			free(*storage);
+		*storage = NULL;
+		return (NULL);
+	}
+	buffer[*chomp] = '\0';
+	*storage = ft_strdup(buffer);
+	while (*chomp > 0 && !ft_strchr(buffer, '\n'))
+	{
+		*chomp = read(fd, buffer, BUFFER_SIZE);
+		buffer[*chomp] = '\0';
+		temp = ft_strljoin(*storage, buffer, ft_strlen(buffer));
+		free(*storage);
+		*storage = ft_strdup(temp);
+		free(temp);
+	}
+	return (*storage);
+}
 
 char	*get_next_line(int fd)
 {
@@ -79,85 +100,20 @@ char	*get_next_line(int fd)
 	char		buffer[BUFFER_SIZE + 1];
 	int			chomp;
 	char		*string;
-	char		*temp;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	string = NULL;
+	chomp = 0;
 	if (storage)
 	{
 		string = throw_it(&storage);
 		if (ft_strchr(string, '\n'))
 			return (string);
 	}
-	chomp = read(fd, buffer, BUFFER_SIZE);
-	if (chomp <= 0 && !string)
-	{
-		if (storage != NULL)
-			free(storage);
-		storage = NULL;
+	storage = read_em_and_weep(fd, &storage, &chomp);
+	if (!storage)
 		return (NULL);
-	}
-	buffer[chomp] = '\0';
-	storage = ft_strdup(buffer);
-	while (chomp > 0 && !ft_strchr(buffer, '\n'))
-	{
-		chomp = read(fd, buffer, BUFFER_SIZE);
-		buffer[chomp] = '\0';
-		temp = ft_strljoin(storage, buffer, ft_strlen(buffer));
-		free(storage);
-		storage = ft_strdup(temp);
-		free(temp);
-	}
 	string = morph(&storage, string);
 	return (string);
 }
-
-// int	main(void)
-// {
-// 	int	fd;
-
-// 	fd = open("big_line_with_nl.txt", O_RDONLY);
-// 	printf("1->%s", get_next_line(fd));
-// 	printf("2->%s", get_next_line(fd));
-// 	printf("3->%s", get_next_line(fd));
-// 	printf("4->%s", get_next_line(fd));
-// 	printf("5->%s", get_next_line(fd));
-// 	printf("6->%s", get_next_line(fd));
-// 	printf("7->%s", get_next_line(fd));
-// 	printf("8->%s", get_next_line(fd));
-// 	printf("9->%s", get_next_line(fd));
-// 	printf("10->%s", get_next_line(fd));
-// }
-// int	main()
-// {
-// 	int fd;
-// 	char *line;
-
-// 	fd = open("multiple_line_no_nl", O_RDONLY);
-// 	line = NULL;
-// 	while (1)
-// 	{
-// 		line = get_next_line(fd);
-// 		printf("%s|", line);
-// 		free(line);
-// 		if (!line)
-// 			break ;
-// 	}
-// }
-	// line = get_next_line(fd);
- 	// printf("%s", line);
- 	// free(line);
-
- 	// line = get_next_line(fd);
- 	// printf("%s", line);
- 	// free(line);
-	
-	// line = get_next_line(fd);
- 	// printf("%s", line);
- 	// free(line);
-
- 	// line = get_next_line(fd);
- 	// printf("%s", line);
- 	// free(line);
-//}
