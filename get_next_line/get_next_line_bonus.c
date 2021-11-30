@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 15:18:53 by nvideira          #+#    #+#             */
-/*   Updated: 2021/11/30 17:47:59 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/11/30 22:25:35 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,22 +98,22 @@ char	*read_em_and_weep(int fd, char **storage)
 
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	*storage[1024];
 	char		*string;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	string = NULL;
-	if (storage)
+	if (storage[fd])
 	{
-		string = throw_it(&storage);
+		string = throw_it(&storage[fd]);
 		if (ft_strchr(string, '\n'))
 			return (string);
 	}
-	storage = read_em_and_weep(fd, &storage);
-	if (!storage && !string)
+	storage[fd] = read_em_and_weep(fd, &storage[fd]);
+	if (!storage[fd] && !string)
 		return (NULL);
-	if (storage)
-		string = morph(&storage, string);
+	if (storage[fd])
+		string = morph(&storage[fd], string);
 	return (string);
 }
