@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:47:10 by nvideira          #+#    #+#             */
-/*   Updated: 2021/10/31 19:35:55 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/12/01 18:19:49 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 typedef struct s_list
 {
@@ -22,6 +27,8 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
+char	*get_next_line(int fd);
+char	*ft_strljoin(char const *s1, char const *s2, unsigned int len);
 int		ft_isalpha(int c);
 int		ft_isprint(int c);
 int		ft_isdigit(int d);
