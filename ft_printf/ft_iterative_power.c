@@ -1,35 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_iterative_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/30 19:49:26 by nvideira          #+#    #+#             */
-/*   Updated: 2021/12/03 18:00:13 by nvideira         ###   ########.fr       */
+/*   Created: 2021/07/13 15:57:28 by nvideira          #+#    #+#             */
+/*   Updated: 2021/12/07 21:29:06 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int	ft_putnbr_fd(int n, int fd)
+int	ft_iterative_power(int nb, int power)
 {
-	if (n == -2147483648)
-		write(fd, "-2147483648", 11);
-	else
+	unsigned int	res;
+
+	res = 1;
+	if (power < 0)
 	{
-		if (n < 0)
-		{
-			write(fd, "-", 1);
-			n = -n;
-		}
-		if (n >= 10)
-		{
-			ft_putnbr_fd((n / 10), fd);
-			ft_putnbr_fd((n % 10), fd);
-		}
-		else
-			ft_putchar_fd((n + '0'), fd);
+		return (0);
 	}
-	return (ft_strlen(ft_itoa(n)));
+	if (power == 0 && nb == 0)
+	{
+		return (1);
+	}
+	while (power > 0)
+	{
+		res *= nb;
+		power--;
+	}
+	return (res);
 }
