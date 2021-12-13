@@ -6,7 +6,7 @@
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 23:27:30 by nvideira          #+#    #+#             */
-/*   Updated: 2021/12/07 21:29:02 by nvideira         ###   ########.fr       */
+/*   Updated: 2021/12/13 22:02:15 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,26 @@ int	check_type(char c)
 		return (0);
 }
 
-void	next_arg(char c, int *char_print, va_list args)
+size_t	next_arg(char ch, int *c, va_list args)
 {
-	if (c == 'c')
-		*char_print += ft_putchar_fd(va_arg(args, char), 1);
-	if (c == 's')
-		*char_print += ft_putstr_fd(va_arg(args, char *), 1);
-	if (c == 'p')
-		*char_print += ;
-	if (c == 'd')
-		*char_print += ft_putnbr_fd(va_arg(args, int), 1, 0);
-	if (c == 'i')
-		*char_print += ;
-	if (c == 'u')
-		*char_print += ft_putunsnbr_fd(va_arg(args, unsigned int), 1);
-	if (c == 'x')
-		*char_print += ;
-	if (c == 'X')
-		*char_print += ;
-	if (c == '%')
-		*char_print += ;
+	if (ch == 'c')
+		*c += ft_putchar_fd(va_arg(args, int), 1);
+	if (ch == 's')
+		*c += ft_putstr_fd(va_arg(args, char *), 1);
+	if (ch == 'p')
+	{
+		*c += ft_putstr_fd("0x", 1);
+		*c += dec_hexa(va_arg(args, unsigned long long), 1, "0123456789abcdef");
+	}
+	if (ch == 'd' || ch == 'i')
+		*c += ft_putnbr_fd(va_arg(args, int), 1);
+	if (ch == 'u')
+		*c += ft_putunsnbr_fd(va_arg(args, unsigned int), 1);
+	if (ch == 'x')
+		*c += dec_hexa(va_arg(args, unsigned int), 1, "0123456789abcdef");
+	if (ch == 'X')
+		*c += dec_hexa(va_arg(args, unsigned int), 1, "0123456789ABCDEF");
+	if (ch == '%')
+		*c += ft_putchar_fd('%', 1);
+	return (*c);
 }

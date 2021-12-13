@@ -5,37 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nvideira <nvideira@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/07 18:27:43 by nvideira          #+#    #+#             */
-/*   Updated: 2021/12/07 21:29:00 by nvideira         ###   ########.fr       */
+/*   Created: 2021/12/12 17:45:20 by nvideira          #+#    #+#             */
+/*   Updated: 2021/12/13 21:53:03 by nvideira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	oct_to_dec(int n)
+long int	dec_hexa(unsigned long n, int fd, char *base)
 {
-	int	ndigits;
-	int	res;
-	int	sign;
+	int				count;
+	unsigned long	unsnum;
 
-	sign = 1;
-	res = 0;
-	ndigits = 0;
-	if (n < 0)
+	unsnum = n;
+	count = 0;
+	if (unsnum > 15)
 	{
-		sign = -1;
-		n = -n;
+		count += dec_hexa((unsnum / 16), fd, base);
+		count += ft_putchar_fd(base[unsnum % 16], fd);
 	}
-	while (n > 0)
-	{
-		res += (n % 10) * ft_iterative_power(8, ndigits);
-		n /= 10;
-		ndigits++;
-	}
-	return (res * sign);
-}
-
-int	hex_to_dec(int n)
-{
-	
+	else
+		count += ft_putchar_fd(base[unsnum], fd);
+	return (count);
 }
